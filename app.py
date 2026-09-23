@@ -10,6 +10,10 @@ app.add_url_rule(
     view_func=GraphQLView.as_view("graphql_view", schema=schema, graphql_ide="graphiql"),
 )
 
+@app.route("/health")
+def health_check():
+    return "OK", 200
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5001))
     app.run(host="0.0.0.0", port=port)
