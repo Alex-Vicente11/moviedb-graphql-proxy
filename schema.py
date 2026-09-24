@@ -1,6 +1,6 @@
 import strawberry
 from tmdb_client import get_popular_movies, get_movie_detail, get_genre_map
-
+from typing import Optional
 
 @strawberry.type
 class Genre:
@@ -14,8 +14,12 @@ class Movie:
     title: str
     overview: str
     poster_path: str
+    backdrop_path: Optional[str]
     release_date: str
-    genre_ids: strawberry.Private[list[int]]  # dato interno, no expuesto directo
+    vote_average: float
+    vote_count: int
+    popularity: float
+    genre_ids: strawberry.Private[list[int]]
 
     @strawberry.field
     def genres(self) -> list[Genre]:
@@ -41,7 +45,11 @@ def _map_to_movie(data: dict) -> Movie:
         title=data["title"],
         overview=data["overview"],
         poster_path=data["poster_path"],
+        backdrop_path=data.get("backdrop_path"),
         release_date=data["release_date"],
+        vote_average=data["vote_average"],
+        vote_count=data["vote_count"],
+        popularity=data["popularity"],
         genre_ids=_extract_genre_ids(data),
     )
 
